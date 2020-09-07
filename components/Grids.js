@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
   Image,
+  Easing,
 } from 'react-native';
 
 export default class Grid extends Component {
@@ -67,37 +68,63 @@ export default class Grid extends Component {
     return y;
   };
 
-  startAnimation = () => {
-    var allGrids = [...this.grid, ...this.secondGrid];
-    // console.log(allGrids, 'all grids');
-    // for(let i=0 ; i < allGrids.length; i++)
-    var i = 0;
+  startAnimation = (i) => {
+    console.log(i, 'i before if');
+    if (i !== null) {
+      // console.log(i, 'i after if');
+      var allGrids = [...this.grid, ...this.secondGrid];
+      // console.log(allGrids, 'all grids');
+      // for(let i=0 ; i < allGrids.length; i++)
+      // var i = 0;
 
-    const setTimeoutFunction = (i, allGrids) => {
-      setTimeout(() => {
-        console.log(i, 'i from setTimeout');
-        allGrids[i].current.measureInWindow((x, y, width, height) => {
-          // console.log(x, y, g, 'from nstart anoimation');
-          // }
-          Animated.sequence([
-            Animated.timing(this.state.animationX, {
-              toValue: this.getValueX(x),
-              duration: 500,
-              useNativeDriver: false,
-            }),
-            Animated.timing(this.state.animationY, {
-              toValue: this.getValueY(y),
-              duration: 500,
-              useNativeDriver: false,
-            }),
-          ]).start();
+      allGrids[i].current.measureInWindow(async (x, y, width, height) => {
+        Animated.parallel([
+          Animated.timing(this.state.animationX, {
+            toValue: this.getValueX(x),
+            duration: 500,
+            useNativeDriver: false,
+            easing: Easing.linear,
+          }),
+          Animated.timing(this.state.animationY, {
+            toValue: this.getValueY(y),
+            duration: 500,
+            useNativeDriver: false,
+            easing: Easing.linear,
+          }),
+        ]).start(() => {
+          i < allGrids.length - 1 ? (i = i + 1) : (i = null);
+          // i++;
+          // console.log(i, 'from start');
+          return this.startAnimation(i);
         });
-        i = i + 1;
-        i < 10 ? setTimeoutFunction(i, allGrids) : '';
-      }, 1500);
-    };
+      });
+    }
 
-    setTimeoutFunction(i, allGrids);
+    // const setTimeoutFunction = (i, allGrids) => {
+    //   setTimeout(() => {
+    //     console.log(i, 'i from setTimeout');
+    //     allGrids[i].current.measureInWindow((x, y, width, height) => {
+    //       // console.log(x, y, g, 'from nstart anoimation');
+    //       // }
+    //       Animated.sequence([
+    //         Animated.timing(this.state.animationX, {
+    //           toValue: this.getValueX(x),
+    //           duration: 250,
+    //           useNativeDriver: false,
+    //         }),
+    //         Animated.timing(this.state.animationY, {
+    //           toValue: this.getValueY(y),
+    //           duration: 250,
+    //           useNativeDriver: false,
+    //         }),
+    //       ]).start();
+    //     });
+    //     i = i + 1;
+    //     i < 10 ? setTimeoutFunction(i, allGrids) : '';
+    //   }, 500);
+    // };
+    //
+    // setTimeoutFunction(i, allGrids);
     // allGrids.map((g) => {
     //   return g.current.measureInWindow((x, y, width, height) => {
     //     // console.log(x, y, g, 'from nstart anoimation');
@@ -182,7 +209,7 @@ export default class Grid extends Component {
           />
         </View>
 
-        <TouchableWithoutFeedback onPress={this.startAnimation}>
+        <TouchableWithoutFeedback onPress={() => this.startAnimation(0)}>
           <Animated.View style={{...styles.view, ...animatedStyles}}>
             <Image
               ref={this.viewImage}
