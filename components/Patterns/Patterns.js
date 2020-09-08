@@ -4,41 +4,34 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   TouchableWithoutFeedback,
-  Animated,
 } from 'react-native';
-import CardFlip from 'react-native-card-flip';
+import {pattern_config,getImageSource} from './config';
 
-var grids2 = [
-  {grid: 1, show: false},
-  {grid: 2, show: false},
-  {grid: 3, show: true},
-];
+
 export default class Patterns extends Component {
   state = {
     grids: [
      
     ],
     count: 0,
+    countClicks:0,
+    configPatternIndex:Math.floor(Math.random() * pattern_config.length)
   };
 
   componentDidMount() {
-   
 
     var randompattern = [];
 
-    while (randompattern.length < 2) {
-      let r = Math.floor(Math.random() * 4);
+    while (randompattern.length < pattern_config[this.state.configPatternIndex].numberOfPatterns) {
+      let r = Math.floor(Math.random() * pattern_config[this.state.configPatternIndex].numberOfGrids);
       if (randompattern.indexOf(r) === -1) {
         randompattern.push(r);
       }
     }
-
-    var grids = Array(2 * 2)
+    var grids = Array(pattern_config[this.state.configPatternIndex].numberOfGrids)
       .fill()
       .map((n, i) => {
-
         return randompattern.filter((ele) => ele == i).length > 0
           ? {
               grid: i + 1,
@@ -76,52 +69,51 @@ export default class Patterns extends Component {
 
   checkPatternCard = (grid, indexOfgrid) => {
     let grids = this.state.grids;
-    grids.map((grid_,i)=>{
-      if (indexOfgrid ==i && grid.isPattern) {
-        grid_.isShow = true;
+ 
+    if(this.state.countClicks < grids.filter(grid_ => grid_.isPattern==true).length){
+      grids.map((grid_,i)=>{
+        if (indexOfgrid ==i && grid_.isPattern) {
+          grid_.isShow = true;
 
-      } 
-      if(indexOfgrid ==i && !grid.isPattern) {
-        grid_.showCross = true;
-        
-      }
-      this.setState({grids: grids});
+        } 
+        if(indexOfgrid ==i && !grid_.isPattern) {
+          grid_.showCross = true;
+          
+        }
+        this.setState({grids: grids,countClicks:this.state.countClicks+1});
 
-    })
-    
+      })
+    }
   };
 
-  // startAnimation = () => {
-  //   Animatew\d.
-  // }
-  // unflip = () => {
-  //   this.card2.flip();
-  // };
-  //
-  // flipIt = () => {
-  //   this.card2.flip();
-  // };
+
+
+
   render() {
+    dynamicColor=this.state.configPatternIndex
+    console.log(dynamicColor)
+    console.log('Patterns.render getImageSource() ', getImageSource(this.configPatternIndex))
     return (
       <>
         <View style={styles.container}>
           <View style={styles.view}>
             <View />
-            <View style={styles.gridStyle}>
+            <View style={{...styles.gridStyle}}>
               {this.state.grids.map((g, id) => (
                 <TouchableWithoutFeedback
                   key={g.grid}
-                  onPress={() => this.checkPatternCard(g, id)}>
+                  onPress={() => {this.state.count ==2 ?this.checkPatternCard(g, id):null} }>
                   <View>
                     {!g.isShow && !g.showCross ? (
-                      <View style={styles.boxStyle} />
+                      <View style={{...styles.boxStyle,backgroundColor: pattern_config[this.state.configPatternIndex].gridColor}} />
                     ) : null}
                     {g.isPattern && g.isShow && !g.showCross ? (
                       <View style={styles.boxStyle}>
-                        <Image
+                          <Image
                           style={styles.pattern}
-                          source={require('../../assets/bluePattern.png')}
+                          source={getImageSource(this.state.configPatternIndex)}
                         />
+                     
                       </View>
                     ) : null}
                     {g.showCross ? (
@@ -182,7 +174,7 @@ const styles = StyleSheet.create({
   boxStyle: {
     width: 78,
     height: 78,
-    backgroundColor: 'blue',
+    
     margin: 4,
   },
   crossStyle: {
