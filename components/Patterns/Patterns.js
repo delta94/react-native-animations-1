@@ -90,9 +90,7 @@ export default class Patterns extends Component {
 
 
   render() {
-    dynamicColor=this.state.configPatternIndex
-    console.log(dynamicColor)
-    console.log('Patterns.render getImageSource() ', getImageSource(this.configPatternIndex))
+ 
     return (
       <>
         <View style={styles.container}>
@@ -117,7 +115,7 @@ export default class Patterns extends Component {
                       </View>
                     ) : null}
                     {g.showCross ? (
-                      <View style={styles.boxStyle}>
+                      <View style={{...styles.boxStyle,backgroundColor: pattern_config[this.state.configPatternIndex].gridColor}}>
                         <Text style={styles.crossStyle}>X</Text>
                       </View>
                     ) : null}
