@@ -18,35 +18,13 @@ var grids2 = [
 export default class Patterns extends Component {
   state = {
     grids: [
-      {grid: 1, isShow: false, isPattern: true, showCross: false},
-      {grid: 2, isShow: false, isPattern: false, showCross: false},
-      {grid: 3, isShow: false, isPattern: false, showCross: false},
+     
     ],
     count: 0,
-    gridToHide: null,
-    patternList: [],
   };
 
   componentDidMount() {
-    // function shuffle(array) {
-    //   array.sort(() => Math.random() - 0.5);
-    // }
-    // shuffle([true, false])[0];
-
-    // let grids = this.state.grids
-    let patternList = this.state.patternList;
-    // let randompattern = [];
-    // randompattern = Array(2)
-    //   .fill()
-    //   .map((i) => {
-    //     var num = Math.floor(Math.random() * 4);
-    //     if (randompattern.indexOf(num) == -1) {
-    //       return num;
-    //     }
-    //     if (randompattern.indexOf(num) !== -1) {
-    //       return num >= 3 && num != 0 ? num - 1 : num + 1;
-    //     }
-    //   });
+   
 
     var randompattern = [];
 
@@ -57,11 +35,9 @@ export default class Patterns extends Component {
       }
     }
 
-    console.log(randompattern, 'random pattern');
     var grids = Array(2 * 2)
       .fill()
       .map((n, i) => {
-        console.log(randompattern.filter((ele) => ele == i));
 
         return randompattern.filter((ele) => ele == i).length > 0
           ? {
@@ -86,13 +62,10 @@ export default class Patterns extends Component {
           grids.map((grid, index) => {
             if (grid.isPattern) {
               grids[index].isShow = grids[index].isShow ? false : true;
-              patternList.push(index);
             }
           });
-          console.log(grids, this.state.count);
           this.setState({grids: grids, count: this.state.count + 1});
           this.state.count < 2 ? setTimeoutFunction() : null;
-          this.state.count == 1 ? this.getRandom() : null;
         },
         this.state.count == 0 ? 700 : 2000,
       );
@@ -100,21 +73,22 @@ export default class Patterns extends Component {
     setTimeoutFunction();
   }
 
-  getRandom = () => {
-    this.setState({
-      gridToHide: Math.floor(Math.random() * this.state.patternList.length),
-    });
-  };
+
   checkPatternCard = (grid, indexOfgrid) => {
     let grids = this.state.grids;
-    if (indexOfgrid != this.state.gridToHide) {
-      grids[indexOfgrid].isCross = true;
+    grids.map((grid_,i)=>{
+      if (indexOfgrid ==i && grid.isPattern) {
+        grid_.isShow = true;
+
+      } 
+      if(indexOfgrid ==i && !grid.isPattern) {
+        grid_.showCross = true;
+        
+      }
       this.setState({grids: grids});
-    } else {
-      grids[indexOfgrid].isShow = true;
-      this.setState({grids: grids});
-      alert('won');
-    }
+
+    })
+    
   };
 
   // startAnimation = () => {
@@ -139,10 +113,10 @@ export default class Patterns extends Component {
                   key={g.grid}
                   onPress={() => this.checkPatternCard(g, id)}>
                   <View>
-                    {!g.isShow && !g.isCross ? (
+                    {!g.isShow && !g.showCross ? (
                       <View style={styles.boxStyle} />
                     ) : null}
-                    {g.isPattern && g.isShow && !g.isCross ? (
+                    {g.isPattern && g.isShow && !g.showCross ? (
                       <View style={styles.boxStyle}>
                         <Image
                           style={styles.pattern}
@@ -150,7 +124,7 @@ export default class Patterns extends Component {
                         />
                       </View>
                     ) : null}
-                    {g.isCross ? (
+                    {g.showCross ? (
                       <View style={styles.boxStyle}>
                         <Text style={styles.crossStyle}>X</Text>
                       </View>
@@ -166,14 +140,7 @@ export default class Patterns extends Component {
   }
 }
 
-// <Image
-//   style={styles.pattern}
-//   source={require('../../assets/blue.png')}
-// />
-// <Image
-//   style={styles.pattern}
-//   source={require('../../assets/bluePattern.png')}
-// />
+
 
 const styles = StyleSheet.create({
   container: {
@@ -207,6 +174,9 @@ const styles = StyleSheet.create({
   },
   gridStyle: {
     justifyContent: 'center',
+    flexDirection:'row',
+    flexWrap:'wrap'
+
   },
 
   boxStyle: {
@@ -224,124 +194,8 @@ const styles = StyleSheet.create({
     textShadowColor: 'red',
     textShadowRadius: 2,
     shadowColor: 'red',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 5,
-    // },
-    // shadowOpacity: 0.36,
-    // shadowRadius: 6.68,
-
-    // elevation: 11,
     textShadowColor: 'red',
     textShadowOffset: {width: 5, height: 5},
     textShadowRadius: 1,
   },
 });
-//
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#F5FCFF',
-//   },
-//   cardContainer: {
-//     width: 320,
-//     height: 470,
-//   },
-//   card: {
-//     width: 320,
-//     height: 470,
-//     backgroundColor: '#FE474C',
-//     borderRadius: 5,
-//     shadowColor: 'rgba(0,0,0,0.5)',
-//     shadowOffset: {
-//       width: 0,
-//       height: 1,
-//     },
-//     shadowOpacity: 0.5,
-//   },
-//   card1: {
-//     backgroundColor: '#FE474C',
-//   },
-//   card2: {
-//     backgroundColor: '#FEB12C',
-//   },
-//   label: {
-//     lineHeight: 470,
-//     textAlign: 'center',
-//     fontSize: 55,
-//     fontFamily: 'System',
-//     color: '#ffffff',
-//     backgroundColor: 'transparent',
-//   },
-// });
-//
-// <CardFlip
-//   style={styles.cardContainer}
-//   ref={(card) => (this.card2 = card)}>
-//   <TouchableOpacity
-//     activeOpacity={1}
-//     style={styles.card}
-//     onPress={() => this.card2.flip()}>
-//     <Image
-//       style={styles.pattern}
-//       source={require('../../assets/blue.png')}
-//     />
-//   </TouchableOpacity>
-//   <TouchableOpacity
-//     activeOpacity={1}
-//     onPress={() => this.unflip()}
-//     style={styles.card}>
-//     <Image
-//       style={styles.pattern}
-//       source={require('../../assets/bluePattern.png')}
-//     />
-//   </TouchableOpacity>
-// </CardFlip>
-//
-// <Image
-//   style={styles.pattern}
-//   source={require('../../assets/blue.png')}
-// />
-// </View>
-// <View
-// style={{
-//   flexDirection: 'row',
-//   justifyContent: 'space-between',
-//   width: 180,
-// }}>
-// <Image
-//   style={styles.pattern}
-//   source={require('../../assets/blue.png')}
-// />
-// <CardFlip
-//   style={styles.cardContainer}
-//   ref={(card) => (this.card = card)}>
-//   <TouchableOpacity
-//     style={styles.card}
-//     activeOpacity={1}
-//     onPress={() => this.card.flip()}>
-//     <Image
-//       style={styles.pattern}
-//       source={require('../../assets/blue.png')}
-//     />
-//   </TouchableOpacity>
-//   <TouchableOpacity
-//     activeOpacity={1}
-//     onPress={() => this.card.flip()}
-//     style={styles.card}>
-//     <Image
-//       style={styles.pattern}
-//       source={require('../../assets/bluePattern.png')}
-//     />
-//   </TouchableOpacity>
-// </CardFlip>
-
-// style={{
-//   flexDirection: 'row',
-//   justifyContent: 'space-between',
-//   width: 180,
-//   height: 100,
-// }}
