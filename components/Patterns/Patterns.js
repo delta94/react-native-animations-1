@@ -6,31 +6,37 @@ import {
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
+  Animated,
 } from 'react-native';
-import {pattern_config,getImageSource} from './config';
+import {pattern_config, getImageSource} from './config';
 import * as Animatable from 'react-native-animatable';
 
 export default class Patterns extends Component {
   state = {
-    grids: [
-     
-    ],
+    grids: [],
     count: 0,
-    countClicks:0,
-    configPatternIndex:Math.floor(Math.random() * pattern_config.length)
+    countClicks: 0,
+    configPatternIndex: Math.floor(Math.random() * pattern_config.length),
   };
 
   componentDidMount() {
-
     var randompattern = [];
 
-    while (randompattern.length < pattern_config[this.state.configPatternIndex].numberOfPatterns) {
-      let r = Math.floor(Math.random() * pattern_config[this.state.configPatternIndex].numberOfGrids);
+    while (
+      randompattern.length <
+      pattern_config[this.state.configPatternIndex].numberOfPatterns
+    ) {
+      let r = Math.floor(
+        Math.random() *
+          pattern_config[this.state.configPatternIndex].numberOfGrids,
+      );
       if (randompattern.indexOf(r) === -1) {
         randompattern.push(r);
       }
     }
-    var grids = Array(pattern_config[this.state.configPatternIndex].numberOfGrids)
+    var grids = Array(
+      pattern_config[this.state.configPatternIndex].numberOfGrids,
+    )
       .fill()
       .map((n, i) => {
         return randompattern.filter((ele) => ele == i).length > 0
@@ -67,34 +73,36 @@ export default class Patterns extends Component {
     setTimeoutFunction();
   }
 
-
   checkPatternCard = (grid, indexOfgrid) => {
     let grids = this.state.grids;
- 
-    if(this.state.countClicks < grids.filter(grid_ => grid_.isPattern==true).length){
-      grids.map((grid_,i)=>{
-        if (indexOfgrid ==i && grid_.isPattern) {
+
+    if (
+      this.state.countClicks <
+      grids.filter((grid_) => grid_.isPattern == true).length
+    ) {
+      grids.map((grid_, i) => {
+        if (indexOfgrid == i && grid_.isPattern) {
           grid_.isShow = true;
-
-        } 
-        if(indexOfgrid ==i && !grid_.isPattern) {
-          this.bounce
-          grid_.showCross = true;
-          
         }
-        this.setState({grids: grids,countClicks:this.state.countClicks+1});
-
-      })
+        if (indexOfgrid == i && !grid_.isPattern) {
+          this.bounce;
+          grid_.showCross = true;
+        }
+        this.setState({grids: grids, countClicks: this.state.countClicks + 1});
+      });
     }
   };
 
-  handleViewRef = ref => this.view = ref;
+  handleViewRef = (ref) => (this.view = ref);
 
-  bounce = () => this.view.bounce(800).then(endState => console.log(endState.finished ? 'bounce finished' : 'bounce cancelled'));
-
+  bounce = () =>
+    this.view
+      .bounce(800)
+      .then((endState) =>
+        console.log(endState.finished ? 'bounce finished' : 'bounce cancelled'),
+      );
 
   render() {
- 
     return (
       <>
         <View style={styles.container}>
@@ -104,39 +112,67 @@ export default class Patterns extends Component {
               {this.state.grids.map((g, id) => (
                 <TouchableWithoutFeedback
                   key={g.grid}
-                  onPress={() => {this.state.count ==2 ?this.checkPatternCard(g, id):null} }>
-                  <View>
+                  onPress={() => {
+                    this.state.count == 2 ? this.checkPatternCard(g, id) : null;
+                  }}>
+                  <Animatable.View
+                    animation="bounceIn"
+                    duration={500}
+                    easing="linear">
                     {!g.isShow && !g.showCross ? (
-                      <View style={{...styles.boxStyle,backgroundColor: pattern_config[this.state.configPatternIndex].gridColor}} />
+                      <View
+                        style={{
+                          ...styles.boxStyle,
+                          backgroundColor:
+                            pattern_config[this.state.configPatternIndex]
+                              .gridColor,
+                        }}
+                      />
                     ) : null}
                     {g.isPattern && g.isShow && !g.showCross ? (
                       <View style={styles.boxStyle}>
-                          <Image
+                        <Animatable.Image
+                          animation={{
+                            from: {
+                              rotateY: this.props.tileVisibility
+                                ? '180deg'
+                                : '0deg',
+                            },
+                            to: {
+                              rotateY: this.props.tileVisibility
+                                ? '0deg'
+                                : '180deg',
+                            },
+                          }}
                           style={styles.pattern}
                           source={getImageSource(this.state.configPatternIndex)}
                         />
-                     
                       </View>
                     ) : null}
                     {g.showCross ? (
-            
-                      <View style={{...styles.boxStyle,backgroundColor: pattern_config[this.state.configPatternIndex].gridColor}}>
+                      <Animatable.View
+                        animation="bounceIn"
+                        duration={500}
+                        easing="bounce"
+                        style={{
+                          ...styles.boxStyle,
+                          backgroundColor:
+                            pattern_config[this.state.configPatternIndex]
+                              .gridColor,
+                        }}>
                         <Text style={styles.crossStyle}>X</Text>
-                      </View>
+                      </Animatable.View>
                     ) : null}
-                  </View>
+                  </Animatable.View>
                 </TouchableWithoutFeedback>
               ))}
             </View>
           </View>
         </View>
-        
       </>
     );
   }
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -170,15 +206,14 @@ const styles = StyleSheet.create({
   },
   gridStyle: {
     justifyContent: 'center',
-    flexDirection:'row',
-    flexWrap:'wrap'
-
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 
   boxStyle: {
     width: 78,
     height: 78,
-    
+
     margin: 4,
   },
   crossStyle: {
