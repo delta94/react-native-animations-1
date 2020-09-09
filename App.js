@@ -22,7 +22,7 @@ import Grids from './components/Grids';
 import TryPan from './components/experimentPan';
 import Game from './components/Game';
 import AdvanceCarousel from './components/AdvanceCarousel';
-import Patterns from './components/Patterns/Patterns';
+import Patterns from './components/Patterns/main';
 
 const App: () => React$Node = () => {
   return (

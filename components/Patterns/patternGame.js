@@ -110,7 +110,6 @@ export default class Patterns extends Component {
     <View style={styles.scoreBox} ><Text style={{fontSize:24,textAlign:'center',color:'white'}}>{this.state.countScore}</Text></View>
         </View>
         <View style={styles.gridContainer}>
-            <View />
             <View style={{...styles.gridStyle}}>
               {this.state.grids.map((g, id) => (
                 <TouchableWithoutFeedback
