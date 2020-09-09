@@ -3,11 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
 import {pattern_config,getImageSource} from './config';
-
+import * as Animatable from 'react-native-animatable';
 
 export default class Patterns extends Component {
   state = {
@@ -77,6 +78,7 @@ export default class Patterns extends Component {
 
         } 
         if(indexOfgrid ==i && !grid_.isPattern) {
+          this.bounce
           grid_.showCross = true;
           
         }
@@ -86,7 +88,9 @@ export default class Patterns extends Component {
     }
   };
 
+  handleViewRef = ref => this.view = ref;
 
+  bounce = () => this.view.bounce(800).then(endState => console.log(endState.finished ? 'bounce finished' : 'bounce cancelled'));
 
 
   render() {
@@ -115,6 +119,7 @@ export default class Patterns extends Component {
                       </View>
                     ) : null}
                     {g.showCross ? (
+            
                       <View style={{...styles.boxStyle,backgroundColor: pattern_config[this.state.configPatternIndex].gridColor}}>
                         <Text style={styles.crossStyle}>X</Text>
                       </View>
@@ -125,6 +130,7 @@ export default class Patterns extends Component {
             </View>
           </View>
         </View>
+        
       </>
     );
   }
