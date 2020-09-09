@@ -107,7 +107,7 @@ export default class Patterns extends Component {
     return (
       <>
            <View style={styles.containerOfScore}>
-    <View style={styles.scoreBox} ><Text style={{fontSize:24,textAlign:'center',color:'white'}}>{this.state.countScore}</Text></View>
+            <View style={styles.scoreBox} ><Text style={{fontSize:22,color:'white'}}> Score</Text><Text style={{fontSize:22,color:'white'}}>{this.state.countScore}</Text></View>
         </View>
         <View style={styles.gridContainer}>
             <View style={{...styles.gridStyle}}>
@@ -188,11 +188,10 @@ const styles = StyleSheet.create({
   scoreBox: {
     backgroundColor: "#21C4CC",
     width: 120,
-    
+    justifyContent:'space-around',
+    flexDirection:'row'
   },
-  view: {
-    // width: 100,
-  },
+
   pattern: {
     width: 78,
     height: 77,

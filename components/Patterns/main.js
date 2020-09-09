@@ -15,8 +15,8 @@ export default class PatternMain extends Component {
   render() {
     return (
         <View style={styles.container}>
-            {/* <Patterns/> */}
-            <Demo/>
+            <Patterns/>
+            {/* <Demo/> */}
           </View>
     );
   }
