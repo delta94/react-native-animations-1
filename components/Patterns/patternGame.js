@@ -74,7 +74,7 @@ export default class Patterns extends Component {
     setTimeoutFunction();
   }
 
-  checkPatternCard = (grid, indexOfgrid) => {
+  checkPatternCard = (indexOfgrid) => {
     let grids = this.state.grids,
       countScore = this.state.countScore
     if (this.state.countClicks < grids.filter(grid_ => grid_.isPattern == true).length) {
@@ -115,7 +115,7 @@ export default class Patterns extends Component {
                 <TouchableWithoutFeedback
                   key={g.grid}
                   onPress={() => {
-                    this.state.count == 2 ? this.checkPatternCard(g, id) : null;
+                    this.state.count == 2 ? this.checkPatternCard( id) : null;
                   }}>
                   <Animatable.View
                     animation="bounceIn"
@@ -196,10 +196,7 @@ const styles = StyleSheet.create({
     width: 78,
     height: 77,
   },
-  cardContainer: {
-    width: 78,
-    height: 77,
-  },
+  
   card: {
     backgroundColor: '#FE474C',
     borderRadius: 5,

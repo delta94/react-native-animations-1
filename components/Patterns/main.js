@@ -1,30 +1,33 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  View,
-  StyleSheet,
+    View,
+    StyleSheet,
 
 } from 'react-native';
 import Patterns from './patternGame'
 import Demo from './demo'
 
 export default class PatternMain extends Component {
-  state = {
-  
-  }
-
-  render() {
-    return (
-        <View style={styles.container}>
-            <Patterns/>
-            {/* <Demo/> */}
-          </View>
-    );
-  }
+    state = {
+        isDemoFinish: false
+    }
+    upDateState = (key, value) => {
+        this.setState({ [key]: value })
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                {this.state.isDemoFinish ?
+                    <Patterns /> :
+                    <Demo upDateState={this.upDateState}/>}
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
- 
+    container: {
+        flex: 1,
+    },
+
 });
